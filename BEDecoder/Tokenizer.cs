@@ -1,6 +1,7 @@
 ﻿using BEDecoder.Tokens;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace BEDecoder
@@ -54,13 +55,22 @@ namespace BEDecoder
                             {
                                 tokens.Push(new BenToken(TokenType.END, "e"));
                                 break;
+                            }else if(char.IsLetter(input[i]) && tokens.Peek().Type == TokenType.COLON)
+                            {
+                                string letters = "";
+                                int length = int.Parse(tokens.Skip(1).First().Literal);
+                                int target = length + i;
+                                while (i < target && char.IsLetter(input[i]))
+                                {
+                                    letters += input[i++];
+                                }
+                                i--;
+                                tokens.Push(new BenToken(TokenType.BYTESTRING, letters));
+                                break;
                             }
                         }
 
                         break;
-
-
-
                 }
             }
 
