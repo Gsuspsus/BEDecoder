@@ -1,4 +1,6 @@
-﻿namespace BEDecoder.Tokens
+﻿using System;
+
+namespace BEDecoder.Tokens
 {
     public enum TokenType
     {
@@ -22,6 +24,18 @@
         {
             Type = type;
             Literal = literal;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is BenToken token &&
+                   Type == token.Type &&
+                   Literal == token.Literal;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Type, Literal);
         }
     }
 }

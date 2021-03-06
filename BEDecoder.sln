@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BEDecoder", "BEDecoder\BEDecoder.csproj", "{A0CB5D45-DECA-4AFB-8F3B-42B7C6710B18}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BEDecoder", "BEDecoder\BEDecoder.csproj", "{A0CB5D45-DECA-4AFB-8F3B-42B7C6710B18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DecoderTestEnv", "DecoderTestEnv\DecoderTestEnv.csproj", "{FD2E9562-2434-449F-9A2C-75708490C07A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DecoderTestEnv", "DecoderTestEnv\DecoderTestEnv.csproj", "{FD2E9562-2434-449F-9A2C-75708490C07A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BEDecoderTests", "BEDecoderTests\BEDecoderTests.csproj", "{15AF72BA-47D9-426E-BEF7-4429E50A5B7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{FD2E9562-2434-449F-9A2C-75708490C07A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD2E9562-2434-449F-9A2C-75708490C07A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD2E9562-2434-449F-9A2C-75708490C07A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15AF72BA-47D9-426E-BEF7-4429E50A5B7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15AF72BA-47D9-426E-BEF7-4429E50A5B7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15AF72BA-47D9-426E-BEF7-4429E50A5B7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15AF72BA-47D9-426E-BEF7-4429E50A5B7D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

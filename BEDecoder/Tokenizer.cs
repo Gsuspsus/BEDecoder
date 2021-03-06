@@ -6,7 +6,7 @@ using System.Text;
 
 namespace BEDecoder
 {
-    class Tokenizer
+    public class Tokenizer
     {
         private static Dictionary<char, TokenType> TypeLiterals = new Dictionary<char, TokenType>()
         {
@@ -17,63 +17,57 @@ namespace BEDecoder
         };
         public static List<BenToken> Tokenize(string input)
         {
-            Stack<BenToken> tokens = new Stack<BenToken>();
+            List<BenToken> tokens = new List<BenToken>();
             int i = 0;
             for (; i < input.Length; i++)
             {
-                switch (input[i])
+                if (isDelimiter(input[i])){
+                    tokens.Add(new BenToken(TypeLiterals[input[i]], input[i].ToString()));
+                }
+                else if (Char.IsDigit(input[i]))
                 {
-                    case 'i':
-                    case 'l':
-                    case 'd':
-                    case ':':
-                        tokens.Push(new BenToken(TypeLiterals[input[i]], input[i].ToString()));
-                        break;
-                    case '0':
-                    case '1':
-                    case '2':
-                    case '3':
-                    case '4':
-                    case '5':
-                    case '6':
-                    case '7':
-                    case '8':
-                    case '9':
-                        (string number, int j) = ReadNumber(input, i);
-                        tokens.Push(new BenToken(TokenType.INTEGER, number));
-                        i = j;
-                        break;
 
-                    default:
-                        if (Char.IsLetter(input[i]))
+                    (string number, int j) = ReadNumber(input, i);
+                    tokens.Add(new BenToken(TokenType.INTEGER, number));
+                    i = j;
+                }
+                else
+                {
+                    if (Char.IsLetter(input[i]))
+                    {
+                        if (input[i] == 'e' && tokens[tokens.Count - 1].Type != TokenType.COLON)
                         {
-                            if (input[i] == 'e' && tokens.Peek().Type != TokenType.COLON)
-                            {
-                                tokens.Push(new BenToken(TokenType.END, "e"));
-                                break;
-                            }
-                            else if (char.IsLetter(input[i]) && tokens.Peek().Type == TokenType.COLON)
-                            {
-                                string letters = "";
-                                int length = int.Parse(tokens.Skip(1).First().Literal);
-                                int target = length + i;
-                                while (i < target && char.IsLetter(input[i]))
-                                {
-                                    letters += input[i++];
-                                }
-                                i--;
-                                tokens.Push(new BenToken(TokenType.BYTESTRING, letters));
-                                break;
-                            }
+                            tokens.Add(new BenToken(TokenType.END, "e"));
                         }
-
-                        break;
+                        else if (char.IsLetter(input[i]) && tokens[tokens.Count - 1].Type == TokenType.COLON)
+                        {
+                            string length = tokens.Skip(1).First().Literal;
+                            (string letters, int k) = ReadByteString(input, int.Parse(length), i);
+                            i = k;
+                            tokens.Add(new BenToken(TokenType.BYTESTRING, letters));
+                        }
+                    }
                 }
             }
+            return tokens;
+        }
 
-            List<BenToken> tokensList = new List<BenToken>(tokens);
-            tokensList.Reverse();
-            return new List<BenToken>(tokensList);
+        private static bool isDelimiter(char c)
+        {
+            return "d:li".Contains(c);
+        }
+
+        private static (string, int) ReadByteString(string input, int length, int i)
+        {
+            string letters = "";
+            int target = length + i;
+            while (i < target && char.IsLetter(input[i]))
+            {
+                letters += input[i++];
+            }
+            i--;
+
+            return (letters, i);
         }
 
         private static (string, int) ReadNumber(string input, int i)
