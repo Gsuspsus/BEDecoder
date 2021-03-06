@@ -43,6 +43,7 @@ namespace BEDecoderTests
             List<BenToken> expectedTokenList = new List<BenToken>() { new BenToken(TokenType.COLON, ":") };
             CollectionAssert.AreEquivalent(expectedTokenList, tokenList);
         }
-
     }
+
+
 }

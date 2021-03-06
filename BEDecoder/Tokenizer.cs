@@ -54,7 +54,7 @@ namespace BEDecoder
 
         private static bool isDelimiter(char c)
         {
-            return "d:li".Contains(c);
+            return TypeLiterals.Keys.Contains(c);
         }
 
         private static (string, int) ReadByteString(string input, int length, int i)
