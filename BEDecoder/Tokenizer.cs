@@ -8,7 +8,14 @@ namespace BEDecoder
 {
     class Tokenizer
     {
-        public List<BenToken> Tokenize(string input)
+        private static Dictionary<char, TokenType> TypeLiterals = new Dictionary<char, TokenType>()
+        {
+            {'i', TokenType.INTEGER_BEGIN },
+            { 'l', TokenType.LIST_BEGIN },
+            {'d', TokenType.DICT_BEGIN },
+            {':', TokenType.COLON }
+        };
+        public static List<BenToken> Tokenize(string input)
         {
             Stack<BenToken> tokens = new Stack<BenToken>();
             int i = 0;
@@ -17,16 +24,10 @@ namespace BEDecoder
                 switch (input[i])
                 {
                     case 'i':
-                        tokens.Push(new BenToken(TokenType.INTEGER_BEGIN, "i"));
-                        break;
                     case 'l':
-                        tokens.Push(new BenToken(TokenType.LIST_BEGIN, "l"));
-                        break;
                     case 'd':
-                        tokens.Push(new BenToken(TokenType.DICT_BEGIN, "d"));
-                        break;
                     case ':':
-                        tokens.Push(new BenToken(TokenType.COLON, ":"));
+                        tokens.Push(new BenToken(TypeLiterals[input[i]], input[i].ToString()));
                         break;
                     case '0':
                     case '1':
@@ -38,24 +39,20 @@ namespace BEDecoder
                     case '7':
                     case '8':
                     case '9':
-                        string number = "";
-                        while (Char.IsDigit(input[i]))
-                        {
-                            number += input[i];
-                            i++;
-                        }
-                        i--;
+                        (string number, int j) = ReadNumber(input, i);
                         tokens.Push(new BenToken(TokenType.INTEGER, number));
+                        i = j;
                         break;
 
                     default:
                         if (Char.IsLetter(input[i]))
                         {
-                            if(input[i] == 'e' && tokens.Peek().Type != TokenType.COLON)
+                            if (input[i] == 'e' && tokens.Peek().Type != TokenType.COLON)
                             {
                                 tokens.Push(new BenToken(TokenType.END, "e"));
                                 break;
-                            }else if(char.IsLetter(input[i]) && tokens.Peek().Type == TokenType.COLON)
+                            }
+                            else if (char.IsLetter(input[i]) && tokens.Peek().Type == TokenType.COLON)
                             {
                                 string letters = "";
                                 int length = int.Parse(tokens.Skip(1).First().Literal);
@@ -77,6 +74,18 @@ namespace BEDecoder
             List<BenToken> tokensList = new List<BenToken>(tokens);
             tokensList.Reverse();
             return new List<BenToken>(tokensList);
+        }
+
+        private static (string, int) ReadNumber(string input, int i)
+        {
+            string number = "";
+            while (Char.IsDigit(input[i]))
+            {
+                number += input[i];
+                i++;
+            }
+            i--;
+            return (number, i);
         }
     }
 }

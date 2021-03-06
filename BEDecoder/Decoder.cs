@@ -8,8 +8,7 @@ namespace BEDecoder
     {
         public void Decode(string input)
         {
-            Tokenizer tokenizer = new Tokenizer();
-            foreach(BenToken tok in tokenizer.Tokenize(input))
+            foreach(BenToken tok in Tokenizer.Tokenize(input))
             {
                 Console.WriteLine($"{tok.Type.ToString()}, {tok.Literal}");
             }
