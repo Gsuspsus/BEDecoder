@@ -11,7 +11,8 @@ namespace BEDecoder.Tokens
         BYTESTRING,
         LIST_BEGIN,
         DICT_BEGIN,
-        END
+        END,
+        INVALID
     };
 
 

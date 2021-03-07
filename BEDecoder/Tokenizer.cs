@@ -8,7 +8,7 @@ namespace BEDecoder
 {
     public class Tokenizer
     {
-        private static Dictionary<char, TokenType> TypeLiterals = new Dictionary<char, TokenType>()
+        public static Dictionary<char, TokenType> TypeLiterals = new Dictionary<char, TokenType>()
         {
             {'i', TokenType.INTEGER_BEGIN },
             { 'l', TokenType.LIST_BEGIN },
@@ -21,15 +21,21 @@ namespace BEDecoder
             int i = 0;
             for (; i < input.Length; i++)
             {
-                if (isDelimiter(input[i])){
+                if (isDelimiter(input[i]))
+                {
                     tokens.Add(new BenToken(TypeLiterals[input[i]], input[i].ToString()));
                 }
                 else if (Char.IsDigit(input[i]))
                 {
-
-                    (string number, int j) = ReadNumber(input, i);
-                    tokens.Add(new BenToken(TokenType.INTEGER, number));
-                    i = j;
+                    try
+                    {
+                        string number = ReadNumber(input, ref i);
+                        tokens.Add(new BenToken(TokenType.INTEGER, number));
+                    }
+                    catch
+                    {
+                        tokens.Add(new BenToken(TokenType.INVALID, null));
+                    }
                 }
                 else
                 {
@@ -42,8 +48,7 @@ namespace BEDecoder
                         else if (char.IsLetter(input[i]) && tokens[tokens.Count - 1].Type == TokenType.COLON)
                         {
                             string length = tokens.Skip(1).First().Literal;
-                            (string letters, int k) = ReadByteString(input, int.Parse(length), i);
-                            i = k;
+                            string letters = ReadByteString(input, int.Parse(length), ref i);
                             tokens.Add(new BenToken(TokenType.BYTESTRING, letters));
                         }
                     }
@@ -57,7 +62,7 @@ namespace BEDecoder
             return TypeLiterals.Keys.Contains(c);
         }
 
-        private static (string, int) ReadByteString(string input, int length, int i)
+        private static string ReadByteString(string input, int length, ref int i)
         {
             string letters = "";
             int target = length + i;
@@ -67,19 +72,28 @@ namespace BEDecoder
             }
             i--;
 
-            return (letters, i);
+            return letters;
         }
 
-        private static (string, int) ReadNumber(string input, int i)
+        private static string ReadNumber(string input, ref int i)
         {
             string number = "";
-            while (Char.IsDigit(input[i]))
+            bool invalid = false;
+            while (input[i] != 'e')
             {
+                if (!char.IsDigit(input[i]))
+                {
+                    invalid = true;
+                }
                 number += input[i];
                 i++;
             }
             i--;
-            return (number, i);
+            if (invalid)
+            {
+                throw new FormatException("Invalid Integer Format");
+            }
+            return number;
         }
     }
 }
