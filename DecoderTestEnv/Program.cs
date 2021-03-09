@@ -8,7 +8,10 @@ namespace DecoderTestEnv
         static void Main(string[] args)
         {
             Decoder d = new Decoder();
-            d.Decode(Console.ReadLine());
+            while (true)
+            {
+                d.Decode(Console.ReadLine());
+            }
         }
     }
 }

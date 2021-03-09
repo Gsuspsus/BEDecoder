@@ -47,7 +47,7 @@ namespace BEDecoder
                         }
                         else if (char.IsLetter(input[i]) && tokens[tokens.Count - 1].Type == TokenType.COLON)
                         {
-                            string length = tokens.Skip(1).First().Literal;
+                            string length = tokens.Skip(tokens.Count - 2).First().Literal;
                             string letters = ReadByteString(input, int.Parse(length), ref i);
                             tokens.Add(new BenToken(TokenType.BYTESTRING, letters));
                         }
@@ -78,21 +78,16 @@ namespace BEDecoder
         private static string ReadNumber(string input, ref int i)
         {
             string number = "";
-            bool invalid = false;
-            while (input[i] != 'e')
+            while (i < input.Length)
             {
                 if (!char.IsDigit(input[i]))
                 {
-                    invalid = true;
+                    break;
                 }
                 number += input[i];
                 i++;
             }
             i--;
-            if (invalid)
-            {
-                throw new FormatException("Invalid Integer Format");
-            }
             return number;
         }
     }
